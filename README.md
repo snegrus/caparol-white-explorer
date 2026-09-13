@@ -12,7 +12,7 @@ python3 -m http.server 4173
 
 Then open <http://127.0.0.1:4173/>.
 
-The shortlist and its order are saved only in the browser's local storage.
+The shortlist and its order are saved in the browser's local storage. Adding, removing, or reordering shades also updates the `compare` URL parameter, so a comparison can be shared as a link.
 
 ## Publish with GitHub Pages
 
@@ -24,4 +24,3 @@ The shortlist and its order are saved only in the browser's local storage.
 The site will be available at:
 
 `https://YOUR-USERNAME.github.io/caparol-white-explorer/`
-

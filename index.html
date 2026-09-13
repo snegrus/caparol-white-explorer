@@ -1190,6 +1190,14 @@
 
     function saveShortlist() {
       try { localStorage.setItem("caparol-shortlist", JSON.stringify(shortlist.map(shade => shade.name))); } catch {}
+      updateShortlistUrl();
+    }
+
+    function updateShortlistUrl() {
+      const url = new URL(window.location.href);
+      if (shortlist.length) url.searchParams.set("compare", shortlist.map(shade => shade.name).join(","));
+      else url.searchParams.delete("compare");
+      history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
     }
 
     function reorderShortlist(fromIndex, toIndex) {
@@ -1251,10 +1259,14 @@
       }
     }
 
-    function restoreShortlist() {
+    function restoreShortlist(syncUrl = false) {
       try {
-        const names = JSON.parse(localStorage.getItem("caparol-shortlist") || "[]");
+        const compareParam = new URL(window.location.href).searchParams.get("compare");
+        const names = compareParam !== null
+          ? compareParam.split(",").filter(Boolean)
+          : JSON.parse(localStorage.getItem("caparol-shortlist") || "[]");
         shortlist = names.map(name => shades.find(shade => shade.name === name)).filter(Boolean);
+        if (syncUrl && compareParam === null && shortlist.length) updateShortlistUrl();
       } catch { shortlist = []; }
     }
 
@@ -1553,6 +1565,12 @@
     });
 
     search.addEventListener("input", renderGrid);
+    window.addEventListener("popstate", () => {
+      restoreShortlist();
+      renderShortlist();
+      renderGrid();
+      renderSpectrum();
+    });
     clearShortlist.addEventListener("click", () => { shortlist = []; saveShortlist(); renderShortlist(); renderGrid(); renderSpectrum(); });
     openComparison.addEventListener("click", () => { renderComparison(); compareDialog.showModal(); });
     toggleSelectedComparison.addEventListener("click", () => {
@@ -1564,7 +1582,7 @@
     });
     closeNeighbors.addEventListener("click", () => neighborDialog.close());
 
-    restoreShortlist();
+    restoreShortlist(true);
     renderShortlist();
     renderGrid();
     selectShade(selected);
