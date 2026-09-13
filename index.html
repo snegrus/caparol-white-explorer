@@ -1200,6 +1200,13 @@
       history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
     }
 
+    function updateComparisonViewUrl(isOpen) {
+      const url = new URL(window.location.href);
+      if (isOpen && shortlist.length) url.searchParams.set("view", "compare");
+      else url.searchParams.delete("view");
+      history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+    }
+
     function decodeComparisonParam(value) {
       let decoded = value;
       for (let pass = 0; pass < 3; pass++) {
@@ -1583,11 +1590,12 @@
       renderSpectrum();
     });
     clearShortlist.addEventListener("click", () => { shortlist = []; saveShortlist(); renderShortlist(); renderGrid(); renderSpectrum(); });
-    openComparison.addEventListener("click", () => { renderComparison(); compareDialog.showModal(); });
+    openComparison.addEventListener("click", () => { renderComparison(); compareDialog.showModal(); updateComparisonViewUrl(true); });
     toggleSelectedComparison.addEventListener("click", () => {
       toggleShortlist(selected);
     });
     closeComparison.addEventListener("click", () => compareDialog.close());
+    compareDialog.addEventListener("close", () => updateComparisonViewUrl(false));
     compareDialog.addEventListener("click", event => {
       if (event.target === compareDialog) compareDialog.close();
     });
@@ -1597,6 +1605,14 @@
     renderShortlist();
     renderGrid();
     selectShade(selected);
+    if (new URL(window.location.href).searchParams.get("view") === "compare") {
+      if (shortlist.length) {
+        renderComparison();
+        compareDialog.showModal();
+      } else {
+        updateComparisonViewUrl(false);
+      }
+    }
     new ResizeObserver(renderSpectrum).observe(document.querySelector("#spectrumChartWrap"));
   </script>
 </body>
