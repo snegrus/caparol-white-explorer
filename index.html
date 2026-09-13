@@ -1200,6 +1200,17 @@
       history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
     }
 
+    function decodeComparisonParam(value) {
+      let decoded = value;
+      for (let pass = 0; pass < 3; pass++) {
+        let next;
+        try { next = decodeURIComponent(decoded); } catch { break; }
+        if (next === decoded) break;
+        decoded = next;
+      }
+      return decoded;
+    }
+
     function reorderShortlist(fromIndex, toIndex) {
       if (!Number.isInteger(fromIndex) || !Number.isInteger(toIndex) || fromIndex === toIndex) return;
       if (fromIndex < 0 || fromIndex >= shortlist.length || toIndex < 0 || toIndex >= shortlist.length) return;
@@ -1263,10 +1274,10 @@
       try {
         const compareParam = new URL(window.location.href).searchParams.get("compare");
         const names = compareParam !== null
-          ? compareParam.split(",").filter(Boolean)
+          ? decodeComparisonParam(compareParam).split(",").filter(Boolean)
           : JSON.parse(localStorage.getItem("caparol-shortlist") || "[]");
         shortlist = names.map(name => shades.find(shade => shade.name === name)).filter(Boolean);
-        if (syncUrl && compareParam === null && shortlist.length) updateShortlistUrl();
+        if (syncUrl && (compareParam !== null || shortlist.length)) updateShortlistUrl();
       } catch { shortlist = []; }
     }
 
