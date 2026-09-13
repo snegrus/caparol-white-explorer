@@ -1,0 +1,1574 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore and compare 25 Caparol 3D-System PLUS white, off-white, and natural wall-paint shades.">
+  <meta name="theme-color" content="#f6f4f1">
+  <title>Caparol Neutral Palette</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231d1d1b'/%3E%3Cpath d='M8 8h16v5H13v11H8z' fill='%23f6f4f1'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --ink: #1d1d1b;
+      --muted: #6e6b64;
+      --line: rgba(29, 29, 27, 0.15);
+      --paper: #f3f1ec;
+      --panel: #faf9f6;
+      --selected: #f6f4f1;
+      --shadow: 0 14px 42px rgba(42, 37, 30, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+    a { color: inherit; }
+
+    .topbar {
+      height: 64px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 30;
+      color: #fff;
+      background: var(--ink);
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      font-weight: 750;
+      letter-spacing: -0.03em;
+    }
+    .brand span {
+      color: #bcbab4;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .count {
+      color: #d2d0ca;
+      font-size: 0.8125rem;
+      letter-spacing: 0.04em;
+    }
+
+    .workspace {
+      min-height: 100vh;
+      padding-top: 64px;
+      display: grid;
+      grid-template-columns: minmax(360px, 46vw) 1fr;
+    }
+
+    .preview {
+      height: calc(100dvh - 64px);
+      min-height: calc(100vh - 64px);
+      position: sticky;
+      top: 64px;
+      align-self: start;
+      overflow-x: hidden;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 28px;
+      background: var(--selected);
+      transition: background-color 420ms cubic-bezier(.2,.7,.2,1);
+      border-right: 1px solid rgba(29,29,27,.12);
+    }
+
+    .preview::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(120deg, transparent 20%, rgba(255,255,255,.14) 56%, rgba(255,255,255,.38));
+      opacity: 0;
+      transition: opacity .3s ease;
+    }
+    .preview[data-light="warm"]::after {
+      opacity: 1;
+      background: linear-gradient(120deg, rgba(255,238,204,.22), rgba(255,248,232,.05));
+    }
+    .preview > * { position: relative; z-index: 1; }
+
+    .preview-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .eyebrow {
+      margin: 0;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .light-control {
+      display: inline-flex;
+      padding: 3px;
+      border: 1px solid rgba(29,29,27,.2);
+      border-radius: 999px;
+      background: rgba(255,255,255,.34);
+      backdrop-filter: blur(10px);
+    }
+    .light-control button {
+      border: 0;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: transparent;
+      cursor: pointer;
+      font-size: .75rem;
+      font-weight: 650;
+    }
+    .light-control button[aria-pressed="true"] {
+      color: #fff;
+      background: var(--ink);
+    }
+
+    .selected-details { max-width: 560px; }
+    .selected-name {
+      margin: 0 0 6px;
+      font-size: clamp(2.8rem, 5.3vw, 5.6rem);
+      line-height: .91;
+      letter-spacing: -.065em;
+      font-weight: 600;
+      text-wrap: balance;
+    }
+    .selected-meta {
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      color: rgba(29,29,27,.72);
+      font-size: .875rem;
+      font-weight: 600;
+    }
+    .selected-note {
+      max-width: 48ch;
+      margin: 18px 0 0;
+      color: rgba(29,29,27,.78);
+      font-size: .9375rem;
+    }
+    .selected-action {
+      margin-top: 20px;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      padding: 10px 14px;
+      color: #fff;
+      background: var(--ink);
+      cursor: pointer;
+      font-size: .8125rem;
+      font-weight: 750;
+    }
+    .selected-action[aria-pressed="true"] {
+      color: var(--ink);
+      background: rgba(255,255,255,.5);
+    }
+    .selected-action[data-mode="manage"] {
+      color: var(--ink);
+      background: rgba(255,255,255,.5);
+    }
+
+    .reference-white {
+      position: absolute;
+      right: 0;
+      bottom: 27%;
+      width: 64px;
+      height: 120px;
+      display: grid;
+      place-items: end center;
+      padding-bottom: 12px;
+      background: #fff;
+      border: 1px solid rgba(29,29,27,.12);
+      border-right: 0;
+      box-shadow: var(--shadow);
+    }
+    .reference-white span {
+      font-size: .6875rem;
+      font-weight: 700;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .shortlist {
+      padding-top: 18px;
+      border-top: 1px solid rgba(29,29,27,.18);
+    }
+    .shortlist-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .clear-shortlist {
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      opacity: .65;
+    }
+    .clear-shortlist[hidden] { display: none; }
+    .shortlist-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+    .open-comparison {
+      border: 0;
+      border-radius: 999px;
+      padding: 7px 11px;
+      color: #fff;
+      background: var(--ink);
+      cursor: pointer;
+      font-size: .75rem;
+      font-weight: 700;
+    }
+    .open-comparison[hidden] { display: none; }
+    .shortlist-swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+      gap: 8px;
+    }
+    .shortlist-empty {
+      min-height: 66px;
+      padding: 12px;
+      display: grid;
+      place-items: center start;
+      border: 1px dashed rgba(29,29,27,.28);
+      border-radius: 4px;
+      color: rgba(29,29,27,.58);
+      background: rgba(255,255,255,.14);
+      font-size: .75rem;
+    }
+    .short-slot {
+      min-height: 66px;
+      position: relative;
+      border: 1px dashed rgba(29,29,27,.28);
+      border-radius: 4px;
+      background: rgba(255,255,255,.14);
+      color: rgba(29,29,27,.56);
+      font-size: .6875rem;
+      cursor: default;
+    }
+    .short-slot.filled {
+      border-style: solid;
+      color: var(--ink);
+      box-shadow: 0 4px 16px rgba(0,0,0,.06);
+      cursor: grab;
+    }
+    .short-slot.filled:active { cursor: grabbing; }
+    .short-slot-main {
+      width: 100%;
+      min-height: 64px;
+      padding: 24px 28px 8px 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      text-align: left;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+    .short-remove {
+      width: 23px;
+      height: 23px;
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(29,29,27,.25);
+      border-radius: 50%;
+      color: var(--ink);
+      background: rgba(255,255,255,.62);
+      cursor: pointer;
+      font-size: .875rem;
+      line-height: 1;
+    }
+    .short-remove:hover { color: #fff; background: var(--ink); }
+    .short-slot strong { font-size: .75rem; }
+    .drag-grip {
+      position: absolute;
+      top: 7px;
+      left: 8px;
+      z-index: 2;
+      color: rgba(29,29,27,.55);
+      font-size: .875rem;
+      font-weight: 800;
+      letter-spacing: -3px;
+      line-height: 1;
+      user-select: none;
+      cursor: grab;
+    }
+    .is-dragging {
+      opacity: .45;
+      cursor: grabbing;
+    }
+    .drag-over {
+      outline: 3px solid var(--ink);
+      outline-offset: -3px;
+    }
+
+    .catalog {
+      min-width: 0;
+      padding: clamp(30px, 5vw, 68px);
+      background: var(--panel);
+    }
+    .catalog-intro {
+      max-width: 720px;
+      margin-bottom: 32px;
+    }
+    .catalog h1 {
+      margin: 0 0 14px;
+      max-width: 700px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3.2rem, 6.6vw, 7rem);
+      line-height: .88;
+      letter-spacing: -.055em;
+      font-weight: 400;
+    }
+    .catalog-intro p {
+      max-width: 58ch;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .spectrum-section {
+      margin: 38px 0 34px;
+      padding: 28px 0 30px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .spectrum-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 22px;
+      margin-bottom: 20px;
+    }
+    .spectrum-copy { max-width: 58ch; }
+    .spectrum-section h2 {
+      margin: 0 0 6px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 3.4vw, 3.25rem);
+      line-height: 1;
+      letter-spacing: -.04em;
+      font-weight: 400;
+    }
+    .spectrum-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .875rem;
+    }
+    .order-control {
+      flex: 0 0 auto;
+      display: flex;
+      gap: 4px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+    }
+    .order-control button {
+      border: 0;
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: transparent;
+      cursor: pointer;
+      font-size: .75rem;
+      font-weight: 650;
+    }
+    .order-control button[aria-pressed="true"] {
+      color: #fff;
+      background: var(--ink);
+    }
+    .spectrum-ribbon-wrap {
+      position: relative;
+      margin-bottom: 7px;
+    }
+    .spectrum-ribbon {
+      height: 58px;
+      border: 1px solid rgba(29,29,27,.24);
+      transition: background .3s ease;
+    }
+    .spectrum-marker {
+      width: 2px;
+      position: absolute;
+      top: -5px;
+      bottom: -5px;
+      background: var(--ink);
+      transform: translateX(-1px);
+      transition: left .28s ease;
+      pointer-events: none;
+    }
+    .spectrum-marker::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      border-radius: 50%;
+      background: var(--ink);
+    }
+    .spectrum-direction {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+      font-size: .6875rem;
+      font-weight: 650;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .spectrum-chart-wrap {
+      width: 100%;
+      min-height: 300px;
+      margin-top: 14px;
+    }
+    .spectrum-chart {
+      width: 100%;
+      height: auto;
+      display: block;
+      overflow: visible;
+    }
+    .spectrum-chart .track-line { stroke: rgba(29,29,27,.14); stroke-width: 1; }
+    .spectrum-chart .track-path { fill: none; stroke: rgba(29,29,27,.58); stroke-width: 1.5; }
+    .spectrum-chart .guide { stroke: rgba(29,29,27,.42); stroke-width: 1; stroke-dasharray: 3 4; }
+    .spectrum-chart .point-visible { stroke: var(--ink); stroke-width: 1; }
+    .spectrum-chart .spectrum-point[aria-current="true"] .point-visible { stroke-width: 3; }
+    .spectrum-chart .spectrum-point.shortlisted .point-visible { stroke-width: 2.5; }
+    .spectrum-chart .point-hit { fill: transparent; }
+    .spectrum-chart .spectrum-point { cursor: pointer; outline: none; }
+    .spectrum-chart .spectrum-point:focus-visible .point-hit { stroke: var(--ink); stroke-width: 2; }
+    .spectrum-chart text {
+      fill: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 12px;
+    }
+    .spectrum-chart .axis-meta { fill: var(--muted); font-size: 11px; }
+    .spectrum-selected {
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 4px;
+      font-size: .8125rem;
+    }
+    .spectrum-selected-swatch {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(29,29,27,.28);
+      border-radius: 50%;
+    }
+    .spectrum-selected span:last-child { color: var(--muted); }
+    .dimension-key {
+      margin-top: 14px;
+      padding-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .75rem;
+    }
+    .dimension-key strong { color: var(--ink); }
+
+    .controls {
+      margin-bottom: 26px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .filters {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    .filters::-webkit-scrollbar { display: none; }
+    .filter {
+      flex: 0 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 9px 14px;
+      background: transparent;
+      cursor: pointer;
+      font-size: .8125rem;
+      font-weight: 650;
+    }
+    .filter[aria-pressed="true"] {
+      color: #fff;
+      border-color: var(--ink);
+      background: var(--ink);
+    }
+    .utility-row {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .results { color: var(--muted); font-size: .8125rem; }
+    .search {
+      width: min(260px, 58vw);
+      border: 0;
+      border-bottom: 1px solid var(--ink);
+      border-radius: 0;
+      padding: 8px 0 8px 24px;
+      color: var(--ink);
+      background: transparent;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%231d1d1b' stroke-width='1.8'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-4-4'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 0 center;
+      outline: none;
+      font-size: .875rem;
+    }
+    .search:focus { border-bottom-width: 2px; }
+
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .swatch-card {
+      min-width: 0;
+      min-height: 190px;
+      padding: 0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      overflow: hidden;
+      background: #fff;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .swatch-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .swatch-card:focus-within { outline: 3px solid var(--ink); outline-offset: 3px; }
+    .swatch-card.active { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+    .card-main {
+      width: 100%;
+      min-height: 188px;
+      padding: 0;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      text-align: left;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+    .card-main:focus { outline: 0; }
+    .swatch-color {
+      flex: 1 1 auto;
+      min-height: 112px;
+      padding: 12px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--line);
+    }
+    .pin {
+      width: 32px;
+      height: 32px;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(29,29,27,.22);
+      border-radius: 50%;
+      background: rgba(255,255,255,.52);
+      cursor: pointer;
+      font-size: 1.1rem;
+      line-height: 1;
+      transition: background .18s ease, color .18s ease;
+    }
+    .pin:hover, .pin[aria-pressed="true"] { color: #fff; background: var(--ink); }
+    .swatch-info {
+      padding: 12px 13px 13px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 8px;
+    }
+    .swatch-name {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: .9375rem;
+      font-weight: 700;
+      letter-spacing: -.01em;
+    }
+    .swatch-family, .swatch-hex {
+      color: var(--muted);
+      font-size: .6875rem;
+      font-weight: 650;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .swatch-hex { text-align: right; }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      padding: 64px 20px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--line);
+    }
+
+    .notes {
+      margin-top: 34px;
+      padding-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .75rem;
+    }
+    .notes p { margin: 0; max-width: 64ch; }
+    .notes a { text-underline-offset: 3px; }
+
+    .compare-dialog {
+      width: 100vw;
+      max-width: none;
+      height: 100dvh;
+      max-height: none;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      color: var(--ink);
+      background: #fff;
+    }
+    .compare-dialog::backdrop { background: rgba(0,0,0,.5); }
+    .compare-dialog[open] { display: grid; grid-template-rows: 64px minmax(0, 1fr); }
+    .compare-bar {
+      position: relative;
+      z-index: 3;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      color: #fff;
+      background: var(--ink);
+    }
+    .compare-bar h2 {
+      margin: 0;
+      font-size: .875rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .compare-bar p {
+      margin: 0 auto 0 0;
+      color: #bcbab4;
+      font-size: .75rem;
+    }
+    .close-comparison {
+      border: 1px solid rgba(255,255,255,.42);
+      border-radius: 999px;
+      padding: 8px 13px;
+      color: #fff;
+      background: transparent;
+      cursor: pointer;
+      font-size: .8125rem;
+      font-weight: 700;
+    }
+    .compare-stage {
+      min-height: 0;
+      position: relative;
+      overflow: auto;
+    }
+    .compare-stage::before {
+      content: "pure white reference";
+      height: 18px;
+      position: absolute;
+      inset: 0 0 auto;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      color: rgba(29,29,27,.58);
+      background: #fff;
+      border-bottom: 1px solid rgba(29,29,27,.17);
+      font-size: .625rem;
+      font-weight: 750;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+    .compare-grid {
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(var(--compare-count, 1), minmax(0, 1fr));
+    }
+    .compare-grid[data-many="true"] {
+      height: auto;
+      min-height: 100%;
+      grid-auto-rows: minmax(320px, 44vh);
+    }
+    .compare-panel {
+      min-width: 0;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      border-right: 1px solid rgba(29,29,27,.2);
+      cursor: grab;
+    }
+    .compare-panel:active { cursor: grabbing; }
+    .compare-panel:last-child { border-right: 0; }
+    .compare-panel .drag-grip {
+      top: 38px;
+      left: 18px;
+      padding: 10px 13px 11px 10px;
+      border: 1px solid rgba(29,29,27,.28);
+      border-radius: 999px;
+      background: rgba(255,255,255,.7);
+      backdrop-filter: blur(10px);
+      font-size: 1rem;
+    }
+    .remove-from-compare {
+      width: 38px;
+      height: 38px;
+      position: absolute;
+      top: 34px;
+      right: 16px;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(29,29,27,.28);
+      border-radius: 50%;
+      color: var(--ink);
+      background: rgba(255,255,255,.7);
+      backdrop-filter: blur(10px);
+      cursor: pointer;
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+    .remove-from-compare:hover { color: #fff; background: var(--ink); }
+    .compare-label {
+      width: 100%;
+      min-height: 108px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: rgba(255,255,255,.72);
+      border-top: 1px solid rgba(29,29,27,.18);
+      backdrop-filter: blur(12px);
+    }
+    .compare-number {
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: .6875rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    .compare-name {
+      font-size: clamp(1.15rem, 2vw, 2rem);
+      line-height: 1;
+      letter-spacing: -.035em;
+      font-weight: 750;
+      overflow-wrap: anywhere;
+    }
+    .compare-values {
+      margin-top: 7px;
+      color: rgba(29,29,27,.64);
+      font-size: .6875rem;
+      font-weight: 650;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .neighbor-dialog {
+      width: min(980px, calc(100vw - 32px));
+      max-width: none;
+      max-height: calc(100dvh - 32px);
+      padding: 0;
+      border: 0;
+      border-radius: 6px;
+      color: var(--ink);
+      background: var(--panel);
+      box-shadow: 0 30px 90px rgba(0,0,0,.28);
+    }
+    .neighbor-dialog::backdrop { background: rgba(29,29,27,.66); backdrop-filter: blur(4px); }
+    .neighbor-dialog[open] { display: grid; grid-template-rows: auto minmax(0, 1fr); }
+    .neighbor-bar {
+      min-height: 72px;
+      padding: 14px 18px 14px 22px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: #fff;
+      background: var(--ink);
+    }
+    .neighbor-bar h2 { margin: 0; font-size: 1rem; }
+    .neighbor-bar p { margin: 2px auto 0 0; color: #bcbab4; font-size: .75rem; }
+    .neighbor-stage {
+      min-height: 0;
+      overflow: auto;
+      padding: clamp(18px, 4vw, 38px);
+    }
+    .neighbor-compass {
+      width: min(100%, 790px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-rows: repeat(5, minmax(96px, 1fr));
+      grid-template-areas:
+        ". . lighter-2 . ."
+        ". . lighter-1 . ."
+        "warmer-2 warmer-1 center cooler-1 cooler-2"
+        ". . darker-1 . ."
+        ". . darker-2 . .";
+      gap: 8px;
+    }
+    .neighbor-card {
+      min-width: 0;
+      min-height: 96px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: left;
+      border: 1px solid rgba(29,29,27,.22);
+      border-radius: 4px;
+      color: var(--ink);
+      cursor: pointer;
+      box-shadow: 0 5px 18px rgba(29,29,27,.06);
+    }
+    button.neighbor-card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(29,29,27,.12); }
+    .neighbor-card[data-position="lighter-1"] { grid-area: lighter-1; }
+    .neighbor-card[data-position="lighter-2"] { grid-area: lighter-2; }
+    .neighbor-card[data-position="darker-1"] { grid-area: darker-1; }
+    .neighbor-card[data-position="darker-2"] { grid-area: darker-2; }
+    .neighbor-card[data-position="warmer-1"] { grid-area: warmer-1; }
+    .neighbor-card[data-position="warmer-2"] { grid-area: warmer-2; }
+    .neighbor-card[data-position="cooler-1"] { grid-area: cooler-1; }
+    .neighbor-card[data-position="cooler-2"] { grid-area: cooler-2; }
+    .neighbor-card[data-position="center"] { grid-area: center; cursor: default; outline: 3px solid var(--ink); outline-offset: -3px; }
+    .neighbor-card[data-step="2"] .neighbor-direction { background: rgba(29,29,27,.62); }
+    .neighbor-direction {
+      width: fit-content;
+      padding: 4px 7px;
+      border-radius: 999px;
+      color: #fff;
+      background: rgba(29,29,27,.82);
+      font-size: .625rem;
+      font-weight: 750;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .neighbor-name {
+      display: block;
+      margin-bottom: 4px;
+      font-size: clamp(.9rem, 1.5vw, 1.15rem);
+      line-height: 1.05;
+      letter-spacing: -.025em;
+      font-weight: 750;
+      overflow-wrap: anywhere;
+    }
+    .neighbor-card[data-position="center"] .neighbor-name { font-size: clamp(1.05rem, 2vw, 1.45rem); }
+    .neighbor-values {
+      display: block;
+      color: rgba(29,29,27,.65);
+      font-size: .6875rem;
+      font-weight: 650;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+    .neighbor-empty {
+      justify-content: center;
+      color: var(--muted);
+      background: transparent !important;
+      border-style: dashed;
+      box-shadow: none;
+      cursor: default;
+    }
+
+    @media (max-width: 900px) {
+      .topbar { padding: 0 18px; }
+      .workspace { display: block; }
+      .preview {
+        height: auto;
+        position: relative;
+        top: auto;
+        min-height: 52vh;
+        overflow: visible;
+        padding: 22px 18px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .selected-name { font-size: clamp(2.8rem, 12vw, 5rem); }
+      .reference-white { bottom: 29%; width: 48px; height: 88px; }
+      .short-slot { min-height: 54px; }
+      .catalog { padding: 38px 18px 48px; }
+      .catalog h1 { font-size: clamp(3.6rem, 17vw, 7rem); }
+      .spectrum-head { align-items: flex-start; flex-direction: column; }
+    }
+
+    @media (max-width: 560px) {
+      .brand span, .count span { display: none; }
+      .preview { min-height: 58vh; }
+      .preview-top { align-items: center; }
+      .selected-note { display: none; }
+      .swatch-grid { grid-template-columns: 1fr; }
+      .swatch-card { min-height: 180px; }
+      .utility-row { align-items: flex-end; }
+      .results { max-width: 110px; }
+      .notes { grid-template-columns: 1fr; }
+      .spectrum-section { margin-top: 30px; }
+      .spectrum-chart-wrap { min-height: 332px; }
+      .dimension-key { grid-template-columns: 1fr; gap: 7px; }
+      .shortlist-head { align-items: flex-start; flex-direction: column; }
+      .compare-bar p { display: none; }
+      .compare-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .compare-grid[data-count="1"] { grid-template-columns: 1fr; }
+      .compare-label { min-height: 98px; padding: 12px; }
+      .remove-from-compare { top: 28px; right: 10px; }
+      .neighbor-dialog { width: calc(100vw - 16px); max-height: calc(100dvh - 16px); }
+      .neighbor-bar { min-height: 64px; }
+      .neighbor-bar p { display: none; }
+      .neighbor-stage { padding: 12px; }
+      .neighbor-compass {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(5, minmax(112px, auto));
+        grid-template-areas:
+          "center center"
+          "lighter-1 lighter-2"
+          "darker-1 darker-2"
+          "warmer-1 warmer-2"
+          "cooler-1 cooler-2";
+        gap: 6px;
+      }
+      .neighbor-card { min-height: 112px; padding: 9px; }
+      .neighbor-direction { padding: 3px 5px; font-size: .5625rem; }
+      .neighbor-values { font-size: .625rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Caparol <span>3D-System PLUS · neutrals</span></div>
+    <div class="count"><strong>25</strong> <span>near-whites</span></div>
+  </header>
+
+  <main class="workspace">
+    <section class="preview" id="preview" data-light="daylight" aria-live="polite">
+      <div class="preview-top">
+        <p class="eyebrow">Selected wall</p>
+        <div class="light-control" aria-label="Preview lighting">
+          <button type="button" data-light="daylight" aria-pressed="true">Daylight</button>
+          <button type="button" data-light="warm" aria-pressed="false">Warm lamp</button>
+        </div>
+      </div>
+
+      <div class="reference-white" title="Pure white reference"><span>Pure white</span></div>
+
+      <div class="selected-details">
+        <h2 class="selected-name" id="selectedName">Indeko-plus weiß</h2>
+        <p class="selected-meta" id="selectedMeta">
+          <span>3D-System PLUS</span><span>L96 · C2 · H102</span><span>#F6F4F1</span>
+        </p>
+        <p class="selected-note" id="selectedNote">Caparol’s own Indeko-plus white: clean and quiet, with a softened warmth beside pure screen white.</p>
+        <button class="selected-action" id="toggleSelectedComparison" type="button" aria-pressed="false">Add to comparison +</button>
+      </div>
+
+      <div class="shortlist">
+        <div class="shortlist-head">
+          <span id="shortlistTitle">Compare shortlist · any number</span>
+          <div class="shortlist-actions">
+            <button class="open-comparison" id="openComparison" type="button" hidden>Open comparison ↗</button>
+            <button class="clear-shortlist" id="clearShortlist" type="button" hidden>Clear</button>
+          </div>
+        </div>
+        <div class="shortlist-swatches" id="shortlist" aria-label="Shortlisted shades"></div>
+      </div>
+    </section>
+
+    <section class="catalog">
+      <div class="catalog-intro">
+        <h1>White,<br>almost.</h1>
+        <p>A focused view of the whites and off-whites in Caparol’s 3D-System PLUS. Choose a swatch to fill the wall; use <strong>+</strong> to hold subtle options side by side.</p>
+      </div>
+
+      <section class="spectrum-section" aria-labelledby="spectrumTitle">
+        <div class="spectrum-head">
+          <div class="spectrum-copy">
+            <h2 id="spectrumTitle">How the whites move</h2>
+            <p>The 3D-System is built on LCH. Order the same 25 shades by any dimension; the ribbon and three connected tracks reveal which transitions are gradual—and which are not.</p>
+          </div>
+          <div class="order-control" role="group" aria-label="Order the spectrum">
+            <button type="button" data-order="h" aria-pressed="true">Hue</button>
+            <button type="button" data-order="l" aria-pressed="false">Lightness</button>
+            <button type="button" data-order="c" aria-pressed="false">Chroma</button>
+          </div>
+        </div>
+        <div class="spectrum-ribbon-wrap">
+          <div class="spectrum-ribbon" id="spectrumRibbon" aria-hidden="true"></div>
+          <div class="spectrum-marker" id="spectrumMarker" aria-hidden="true"></div>
+        </div>
+        <div class="spectrum-direction" id="spectrumDirection"><span>rosé / warm</span><span>fresh / cool</span></div>
+        <div class="spectrum-chart-wrap" id="spectrumChartWrap">
+          <svg class="spectrum-chart" id="spectrumChart" role="img" aria-labelledby="spectrumChartTitle spectrumChartDesc">
+            <title id="spectrumChartTitle">Caparol near-white shades across LCH dimensions</title>
+            <desc id="spectrumChartDesc">Three connected tracks show lightness, chroma, and hue for all 25 shades. Select any point to preview that shade.</desc>
+          </svg>
+        </div>
+        <div class="spectrum-selected" aria-live="polite">
+          <span class="spectrum-selected-swatch" id="spectrumSelectedSwatch"></span>
+          <strong id="spectrumSelectedName">Indeko-plus weiß</strong>
+          <span id="spectrumSelectedValues">L96 · C2 · H102</span>
+        </div>
+        <div class="dimension-key">
+          <span><strong>L · Lightness</strong> — shaded 90 → bright 96</span>
+          <span><strong>C · Chroma</strong> — neutral 0 → stronger undertone 7</span>
+          <span><strong>H · Hue angle</strong> — warm 50–100° → fresh/cool 180–242°</span>
+        </div>
+      </section>
+
+      <div class="controls">
+        <div class="filters" role="group" aria-label="Filter by character">
+          <button class="filter" type="button" data-filter="all" aria-pressed="true">All 25</button>
+          <button class="filter" type="button" data-filter="neutral" aria-pressed="false">Neutral</button>
+          <button class="filter" type="button" data-filter="natural" aria-pressed="false">Natural</button>
+          <button class="filter" type="button" data-filter="warm" aria-pressed="false">Warm</button>
+          <button class="filter" type="button" data-filter="fresh" aria-pressed="false">Fresh</button>
+          <button class="filter" type="button" data-filter="off-white" aria-pressed="false">Off White</button>
+        </div>
+        <div class="utility-row">
+          <span class="results" id="results">Showing all 25 shades</span>
+          <input class="search" id="search" type="search" placeholder="Find a shade" aria-label="Find a shade">
+        </div>
+      </div>
+
+      <div class="swatch-grid" id="swatchGrid"></div>
+
+      <footer class="notes">
+        <p>Screen previews are orientation aids, not paint matches. Displays, room light, surface texture, and sheen all shift the result—confirm your shortlist with a painted sample or physical Caparol fan deck.</p>
+        <p><a href="https://www.caparol.de/en/design/colour-collections/white" target="_blank" rel="noreferrer">About Caparol WHITE ↗</a></p>
+      </footer>
+    </section>
+  </main>
+
+  <dialog class="compare-dialog" id="compareDialog" aria-labelledby="compareTitle">
+    <header class="compare-bar">
+      <h2 id="compareTitle">Wall comparison</h2>
+      <p>Your shortlisted shades at equal scale</p>
+      <button class="close-comparison" id="closeComparison" type="button">Close ×</button>
+    </header>
+    <div class="compare-stage">
+      <div class="compare-grid" id="compareGrid"></div>
+    </div>
+  </dialog>
+
+  <dialog class="neighbor-dialog" id="neighborDialog" aria-labelledby="neighborTitle">
+    <header class="neighbor-bar">
+      <div>
+        <h2 id="neighborTitle">Nearest shades around this color</h2>
+        <p>Two steps in each direction: lightness up/down, hue left/right. Chroma keeps each step close in undertone.</p>
+      </div>
+      <button class="close-comparison" id="closeNeighbors" type="button">Close ×</button>
+    </header>
+    <div class="neighbor-stage">
+      <div class="neighbor-compass" id="neighborCompass"></div>
+    </div>
+  </dialog>
+
+  <script>
+    const shades = [
+      { name: "Indeko-plus weiß", family: "neutral", rgb: [246,244,241], lch: [96,2,102], note: "Caparol’s own Indeko-plus white: clean and quiet, with a softened warmth beside pure screen white." },
+      { name: "Verkehrsweiß", family: "neutral", rgb: [242,240,235], lch: [95,3,106], note: "A bright architectural white with a controlled, lightly softened appearance." },
+      { name: "Porzellanweiß", family: "neutral", rgb: [239,236,236], lch: [94,0,16], note: "A balanced porcelain white with barely perceptible rosy-grey depth." },
+      { name: "Hellweiß", family: "neutral", rgb: [243,239,234], lch: [96,2,109], note: "High in lightness, but gentler than a stark technical white." },
+      { name: "Grauweiß", family: "neutral", rgb: [238,233,228], lch: [93,1,116], note: "A calm white carrying a fine grey veil—useful beside stone and concrete." },
+      { name: "Signalweiß", family: "neutral", rgb: [239,237,235], lch: [94,1,110], note: "A crisp, near-neutral white that still avoids the glare of a pure digital white." },
+      { name: "Marmorweiß", family: "neutral", rgb: [233,232,232], lch: [92,1,120], note: "A softly shaded mineral white, reminiscent of pale honed marble." },
+      { name: "Reinweiß", family: "neutral", rgb: [242,238,230], lch: [94,5,97], note: "A clear white with a modest creamy undertone rather than a blue cast." },
+      { name: "Antikweiß", family: "natural", rgb: [245,240,233], lch: [95,4,92], note: "A lightly aged white that reads welcoming without becoming distinctly beige." },
+      { name: "Altweiß", family: "natural", rgb: [244,240,232], lch: [95,4,94], note: "A familiar old-white character with a subtle parchment warmth." },
+      { name: "Muschelweiß", family: "natural", rgb: [245,241,237], lch: [95,3,92], note: "A delicate shell white: soft, bright and quietly warm." },
+      { name: "Naturweiß", family: "natural", rgb: [238,232,224], lch: [93,3,95], note: "A grounded natural white with enough warmth to sit comfortably beside timber and linen." },
+      { name: "Samtweiß", family: "natural", rgb: [243,236,226], lch: [93,5,85], note: "A velvety, warm white with a fuller cream presence." },
+      { name: "Lichtweiß", family: "warm", rgb: [247,242,236], lch: [95,4,90], note: "A luminous white with a gentle yellow-red warmth." },
+      { name: "Warmweiß", family: "warm", rgb: [232,225,219], lch: [91,2,87], note: "A noticeably shaded warm white that keeps bright rooms from feeling cold." },
+      { name: "Umbraweiß", family: "warm", rgb: [233,227,217], lch: [92,4,95], note: "An earthy white touched by umber—restrained, calm and grounded." },
+      { name: "Cremeweiß", family: "warm", rgb: [234,226,211], lch: [90,7,84], note: "The creamiest named white in this set, with a clear golden-beige undertone." },
+      { name: "Perlmuttweiß", family: "warm", rgb: [237,228,225], lch: [91,3,56], note: "A pearl white carrying the faintest warm blush." },
+      { name: "Kühlweiß", family: "fresh", rgb: [234,230,228], lch: [91,1,185], note: "A shaded cool white with a clean mineral character." },
+      { name: "Off White 15", family: "off-white", rgb: [246,234,227], lch: [95,3,51], note: "A very light off-white with a soft pink-peach undertone." },
+      { name: "Off White 20", family: "off-white", rgb: [243,236,220], lch: [96,5,92], note: "A bright creamy off-white with mellow golden warmth." },
+      { name: "Off White 25", family: "off-white", rgb: [245,239,223], lch: [96,7,101], note: "A sunny high-lightness off-white, slightly clearer than Off White 20." },
+      { name: "Off White 30", family: "off-white", rgb: [242,241,228], lch: [96,5,123], note: "A pale yellow-green off-white that feels fresh rather than creamy." },
+      { name: "Off White 40", family: "off-white", rgb: [229,238,232], lch: [95,4,190], note: "A cool mint-grey off-white—airy, quiet and distinctly fresh." },
+      { name: "Off White 50", family: "off-white", rgb: [236,235,233], lch: [94,3,242], note: "A pale cool-grey off-white with a barely blue-violet direction." }
+    ];
+
+    const labels = { neutral: "Neutral", natural: "Natural", warm: "Warm", fresh: "Fresh", "off-white": "Off White" };
+    const grid = document.querySelector("#swatchGrid");
+    const preview = document.querySelector("#preview");
+    const selectedName = document.querySelector("#selectedName");
+    const selectedMeta = document.querySelector("#selectedMeta");
+    const selectedNote = document.querySelector("#selectedNote");
+    const toggleSelectedComparison = document.querySelector("#toggleSelectedComparison");
+    const search = document.querySelector("#search");
+    const resultText = document.querySelector("#results");
+    const shortlistEl = document.querySelector("#shortlist");
+    const shortlistTitle = document.querySelector("#shortlistTitle");
+    const clearShortlist = document.querySelector("#clearShortlist");
+    const openComparison = document.querySelector("#openComparison");
+    const compareDialog = document.querySelector("#compareDialog");
+    const compareGrid = document.querySelector("#compareGrid");
+    const closeComparison = document.querySelector("#closeComparison");
+    const neighborDialog = document.querySelector("#neighborDialog");
+    const neighborCompass = document.querySelector("#neighborCompass");
+    const closeNeighbors = document.querySelector("#closeNeighbors");
+    let activeFilter = "all";
+    let selected = shades[0];
+    let shortlist = [];
+    let draggedShortlistIndex = null;
+    let spectrumOrder = "h";
+
+    const toHex = (rgb) => "#" + rgb.map(v => v.toString(16).padStart(2, "0")).join("").toUpperCase();
+    const rgbString = (shade) => `rgb(${shade.rgb.join(", ")})`;
+
+    function selectShade(shade, shouldScroll = false) {
+      selected = shade;
+      document.documentElement.style.setProperty("--selected", rgbString(shade));
+      selectedName.textContent = shade.name;
+      selectedMeta.innerHTML = `<span>3D-System PLUS</span><span>L${shade.lch[0]} · C${shade.lch[1]} · H${shade.lch[2]}</span><span>${toHex(shade.rgb)}</span>`;
+      selectedNote.textContent = shade.note;
+      document.querySelectorAll(".swatch-card").forEach(card => card.classList.toggle("active", card.dataset.name === shade.name));
+      updateSelectedComparisonAction();
+      renderSpectrum();
+      if (shouldScroll && window.innerWidth <= 900) preview.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function toggleShortlist(shade) {
+      const index = shortlist.findIndex(item => item.name === shade.name);
+      if (index >= 0) shortlist.splice(index, 1);
+      else shortlist.push(shade);
+      saveShortlist();
+      renderShortlist();
+      renderGrid();
+      renderSpectrum();
+    }
+
+    function saveShortlist() {
+      try { localStorage.setItem("caparol-shortlist", JSON.stringify(shortlist.map(shade => shade.name))); } catch {}
+    }
+
+    function reorderShortlist(fromIndex, toIndex) {
+      if (!Number.isInteger(fromIndex) || !Number.isInteger(toIndex) || fromIndex === toIndex) return;
+      if (fromIndex < 0 || fromIndex >= shortlist.length || toIndex < 0 || toIndex >= shortlist.length) return;
+      const [movedShade] = shortlist.splice(fromIndex, 1);
+      shortlist.splice(toIndex, 0, movedShade);
+      saveShortlist();
+      renderShortlist();
+      renderGrid();
+      renderSpectrum();
+    }
+
+    function wireShortlistDrag(element, index) {
+      element.draggable = true;
+      element.dataset.shortlistIndex = String(index);
+      element.addEventListener("dragstart", event => {
+        if (event.target.closest("button")) {
+          event.preventDefault();
+          return;
+        }
+        draggedShortlistIndex = index;
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/plain", String(index));
+        requestAnimationFrame(() => element.classList.add("is-dragging"));
+      });
+      element.addEventListener("dragover", event => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+        element.classList.add("drag-over");
+      });
+      element.addEventListener("dragleave", event => {
+        if (!element.contains(event.relatedTarget)) element.classList.remove("drag-over");
+      });
+      element.addEventListener("drop", event => {
+        event.preventDefault();
+        const transferredIndex = event.dataTransfer.getData("text/plain");
+        const fromIndex = transferredIndex === "" ? draggedShortlistIndex : Number(transferredIndex);
+        element.classList.remove("drag-over");
+        reorderShortlist(fromIndex, index);
+      });
+      element.addEventListener("dragend", () => {
+        draggedShortlistIndex = null;
+        document.querySelectorAll(".is-dragging, .drag-over").forEach(node => node.classList.remove("is-dragging", "drag-over"));
+      });
+    }
+
+    function updateSelectedComparisonAction() {
+      const included = shortlist.some(shade => shade.name === selected.name);
+      toggleSelectedComparison.setAttribute("aria-pressed", String(included));
+      if (included) {
+        toggleSelectedComparison.dataset.mode = "remove";
+        toggleSelectedComparison.textContent = "Remove from comparison −";
+        toggleSelectedComparison.setAttribute("aria-label", `Remove ${selected.name} from comparison`);
+      } else {
+        toggleSelectedComparison.dataset.mode = "add";
+        toggleSelectedComparison.textContent = "Add to comparison +";
+        toggleSelectedComparison.setAttribute("aria-label", `Add ${selected.name} to comparison`);
+      }
+    }
+
+    function restoreShortlist() {
+      try {
+        const names = JSON.parse(localStorage.getItem("caparol-shortlist") || "[]");
+        shortlist = names.map(name => shades.find(shade => shade.name === name)).filter(Boolean);
+      } catch { shortlist = []; }
+    }
+
+    function spectrumShades() {
+      const index = { l: 0, c: 1, h: 2 }[spectrumOrder];
+      return [...shades].sort((a, b) => a.lch[index] - b.lch[index] || a.name.localeCompare(b.name));
+    }
+
+    function svgElement(name, attributes = {}) {
+      const element = document.createElementNS("http://www.w3.org/2000/svg", name);
+      Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+      return element;
+    }
+
+    function renderSpectrum() {
+      const wrap = document.querySelector("#spectrumChartWrap");
+      const svg = document.querySelector("#spectrumChart");
+      if (!wrap || !svg) return;
+
+      const ordered = spectrumShades();
+      const width = Math.max(320, Math.round(wrap.clientWidth));
+      const compact = width < 560;
+      const height = compact ? 332 : 300;
+      const left = compact ? 62 : 72;
+      const right = 18;
+      const top = 16;
+      const rowGap = compact ? 106 : 91;
+      const rowHeight = compact ? 66 : 54;
+      const plotWidth = width - left - right;
+      const rows = [
+        { label: "Lightness", short: "L", index: 0, min: 90, max: 96 },
+        { label: "Chroma", short: "C", index: 1, min: 0, max: 7 },
+        { label: "Hue angle", short: "H", index: 2, min: 16, max: 242 }
+      ];
+      const xAt = i => left + (ordered.length === 1 ? plotWidth / 2 : i * plotWidth / (ordered.length - 1));
+      const yAt = (value, row, rowTop) => rowTop + rowHeight - ((value - row.min) / (row.max - row.min)) * rowHeight;
+      const selectedIndex = Math.max(0, ordered.findIndex(shade => shade.name === selected.name));
+
+      svg.replaceChildren();
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      svg.setAttribute("height", height);
+
+      const title = svgElement("title", { id: "spectrumChartTitle" });
+      title.textContent = "Caparol near-white shades across LCH dimensions";
+      const desc = svgElement("desc", { id: "spectrumChartDesc" });
+      desc.textContent = "Three connected tracks show lightness, chroma, and hue for all 25 shades. Select any point to preview that shade.";
+      svg.append(title, desc);
+
+      const guide = svgElement("line", {
+        class: "guide",
+        x1: xAt(selectedIndex), x2: xAt(selectedIndex),
+        y1: top - 3, y2: top + rowGap * 2 + rowHeight + 4
+      });
+      svg.appendChild(guide);
+
+      rows.forEach((row, rowIndex) => {
+        const rowTop = top + rowIndex * rowGap;
+        const topLine = svgElement("line", { class: "track-line", x1: left, x2: width - right, y1: rowTop, y2: rowTop });
+        const bottomLine = svgElement("line", { class: "track-line", x1: left, x2: width - right, y1: rowTop + rowHeight, y2: rowTop + rowHeight });
+        const label = svgElement("text", { x: 0, y: rowTop + 18 });
+        label.textContent = row.label;
+        const range = svgElement("text", { class: "axis-meta", x: 0, y: rowTop + 36 });
+        range.textContent = `${row.short}${row.min}–${row.max}`;
+        svg.append(topLine, bottomLine, label, range);
+
+        const pathData = ordered.map((shade, i) => `${i === 0 ? "M" : "L"}${xAt(i).toFixed(1)},${yAt(shade.lch[row.index], row, rowTop).toFixed(1)}`).join(" ");
+        svg.appendChild(svgElement("path", { class: "track-path", d: pathData }));
+
+        ordered.forEach((shade, i) => {
+          const value = shade.lch[row.index];
+          const group = svgElement("g", {
+            class: `spectrum-point${shortlist.some(item => item.name === shade.name) ? " shortlisted" : ""}`,
+            transform: `translate(${xAt(i).toFixed(1)} ${yAt(value, row, rowTop).toFixed(1)})`,
+            role: "button",
+            "aria-label": `Preview ${shade.name}: L${shade.lch[0]}, C${shade.lch[1]}, H${shade.lch[2]}`,
+            "aria-current": String(shade.name === selected.name),
+            tabindex: "0"
+          });
+          const hit = svgElement("circle", { class: "point-hit", r: compact ? 15 : 13 });
+          const radius = 4.5 + shade.lch[1] * .48;
+          const dot = svgElement("circle", { class: "point-visible", r: radius.toFixed(1), fill: rgbString(shade) });
+          const tooltip = svgElement("title");
+          tooltip.textContent = `${shade.name} · L${shade.lch[0]} C${shade.lch[1]} H${shade.lch[2]}`;
+          group.append(hit, dot, tooltip);
+          group.addEventListener("click", () => selectShade(shade));
+          group.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") { event.preventDefault(); selectShade(shade); }
+          });
+          svg.appendChild(group);
+        });
+      });
+
+      const gradientStops = ordered.map((shade, i) => `${rgbString(shade)} ${(i / (ordered.length - 1) * 100).toFixed(2)}%`).join(", ");
+      document.querySelector("#spectrumRibbon").style.background = `linear-gradient(90deg, ${gradientStops})`;
+      document.querySelector("#spectrumMarker").style.left = `${selectedIndex / (ordered.length - 1) * 100}%`;
+      document.querySelector("#spectrumSelectedSwatch").style.background = rgbString(selected);
+      document.querySelector("#spectrumSelectedName").textContent = selected.name;
+      document.querySelector("#spectrumSelectedValues").textContent = `L${selected.lch[0]} · C${selected.lch[1]} · H${selected.lch[2]}`;
+
+      const directions = {
+        h: ["low hue · blush / warm", "high hue · fresh / cool"],
+        l: ["more shaded", "brighter"],
+        c: ["most neutral", "stronger undertone"]
+      }[spectrumOrder];
+      document.querySelector("#spectrumDirection").innerHTML = `<span>${directions[0]}</span><span>${directions[1]}</span>`;
+    }
+
+    function renderShortlist() {
+      shortlistEl.innerHTML = "";
+      shortlistTitle.textContent = shortlist.length
+        ? `Compare shortlist · ${shortlist.length} shade${shortlist.length === 1 ? "" : "s"}`
+        : "Compare shortlist · any number";
+      if (!shortlist.length) {
+        const empty = document.createElement("div");
+        empty.className = "shortlist-empty";
+        empty.textContent = "Add shades with + to build your comparison.";
+        shortlistEl.appendChild(empty);
+      }
+      shortlist.forEach((shade, i) => {
+        const slot = document.createElement("div");
+        slot.className = "short-slot filled";
+        slot.style.background = rgbString(shade);
+        slot.innerHTML = `<span class="drag-grip" aria-hidden="true">⋮⋮</span><button class="short-slot-main" type="button" aria-label="Preview ${shade.name}"><strong>${shade.name}</strong><span>${toHex(shade.rgb)}</span></button><button class="short-remove" type="button" aria-label="Remove ${shade.name} from comparison">×</button>`;
+        slot.querySelector(".short-slot-main").addEventListener("click", () => selectShade(shade));
+        slot.querySelector(".short-remove").addEventListener("click", () => toggleShortlist(shade));
+        wireShortlistDrag(slot, i);
+        shortlistEl.appendChild(slot);
+      });
+      clearShortlist.hidden = shortlist.length === 0;
+      openComparison.hidden = shortlist.length === 0;
+      updateSelectedComparisonAction();
+      if (compareDialog.open) renderComparison();
+    }
+
+    function renderComparison() {
+      compareGrid.innerHTML = "";
+      compareGrid.style.setProperty("--compare-count", Math.min(shortlist.length || 1, 4));
+      compareGrid.dataset.count = String(shortlist.length || 1);
+      compareGrid.dataset.many = String(shortlist.length > 4);
+      shortlist.forEach((shade, index) => {
+        const panel = document.createElement("section");
+        panel.className = "compare-panel";
+        panel.style.background = rgbString(shade);
+        panel.setAttribute("aria-label", `${shade.name}, ${toHex(shade.rgb)}`);
+        panel.innerHTML = `<span class="drag-grip" aria-hidden="true">⋮⋮</span><button class="remove-from-compare" type="button" aria-label="Remove ${shade.name} from comparison">×</button><div class="compare-label"><span class="compare-number">${String(index + 1).padStart(2, "0")}</span><strong class="compare-name">${shade.name}</strong><span class="compare-values">L${shade.lch[0]} · C${shade.lch[1]} · H${shade.lch[2]} · ${toHex(shade.rgb)}</span></div>`;
+        wireShortlistDrag(panel, index);
+        panel.querySelector(".remove-from-compare").addEventListener("click", () => {
+          shortlist = shortlist.filter(item => item.name !== shade.name);
+          saveShortlist();
+          renderShortlist();
+          renderGrid();
+          renderSpectrum();
+          if (!shortlist.length) compareDialog.close();
+        });
+        compareGrid.appendChild(panel);
+      });
+    }
+
+    function hueDistance(a, b) {
+      const difference = Math.abs(a - b) % 360;
+      return Math.min(difference, 360 - difference);
+    }
+
+    function effectiveHue(shade) {
+      return shade.lch[1] < 1 ? 110 : shade.lch[2];
+    }
+
+    function directionalNeighbor(center, direction) {
+      const centerHue = effectiveHue(center);
+      const candidates = shades.filter(candidate => {
+        if (candidate.name === center.name) return false;
+        if (direction === "lighter") return candidate.lch[0] > center.lch[0];
+        if (direction === "darker") return candidate.lch[0] < center.lch[0];
+        if (direction === "warmer") return effectiveHue(candidate) < centerHue;
+        return effectiveHue(candidate) > centerHue;
+      });
+      if (!candidates.length) return null;
+
+      const score = candidate => {
+        const dL = Math.abs(candidate.lch[0] - center.lch[0]);
+        const dC = Math.abs(candidate.lch[1] - center.lch[1]);
+        const dH = hueDistance(effectiveHue(candidate), centerHue);
+        if (direction === "lighter" || direction === "darker") return dL * 5 + dC * 1.4 + dH / 18;
+        return dH / 7 + dL * 1.7 + dC * 1.25;
+      };
+      return candidates.sort((a, b) => score(a) - score(b))[0];
+    }
+
+    function neighborCard(shade, position, label, center = false, step = 1) {
+      const element = document.createElement(center ? "div" : shade ? "button" : "div");
+      element.className = `neighbor-card${shade ? "" : " neighbor-empty"}`;
+      element.dataset.position = position;
+      element.dataset.step = String(step);
+      if (shade) {
+        if (!center) element.type = "button";
+        element.style.background = rgbString(shade);
+        element.innerHTML = `<span class="neighbor-direction">${label}</span><span><strong class="neighbor-name">${shade.name}</strong><span class="neighbor-values">L${shade.lch[0]} · C${shade.lch[1]} · H${shade.lch[2]} · ${toHex(shade.rgb)}</span></span>`;
+        if (!center) element.addEventListener("click", () => openNeighbors(shade, true));
+      } else {
+        element.innerHTML = `<span class="neighbor-direction">${label}</span><span class="neighbor-name">End of this range</span>`;
+      }
+      return element;
+    }
+
+    function directionalNeighbors(center, direction) {
+      const first = directionalNeighbor(center, direction);
+      const second = first ? directionalNeighbor(first, direction) : null;
+      return [first, second];
+    }
+
+    function renderNeighbors(center) {
+      const [lighter1, lighter2] = directionalNeighbors(center, "lighter");
+      const [darker1, darker2] = directionalNeighbors(center, "darker");
+      const [warmer1, warmer2] = directionalNeighbors(center, "warmer");
+      const [cooler1, cooler2] = directionalNeighbors(center, "cooler");
+      neighborCompass.replaceChildren(
+        neighborCard(lighter2, "lighter-2", "↑ Lighter · step 2", false, 2),
+        neighborCard(lighter1, "lighter-1", "↑ Lighter · step 1"),
+        neighborCard(warmer2, "warmer-2", "← Warmer · step 2", false, 2),
+        neighborCard(warmer1, "warmer-1", "← Warmer · step 1"),
+        neighborCard(center, "center", "Selected", true),
+        neighborCard(cooler1, "cooler-1", "Cooler · step 1 →"),
+        neighborCard(cooler2, "cooler-2", "Cooler · step 2 →", false, 2),
+        neighborCard(darker1, "darker-1", "↓ Darker · step 1"),
+        neighborCard(darker2, "darker-2", "↓ Darker · step 2", false, 2)
+      );
+    }
+
+    function openNeighbors(shade, alreadyOpen = false) {
+      selectShade(shade);
+      renderNeighbors(shade);
+      if (!alreadyOpen && !neighborDialog.open) neighborDialog.showModal();
+    }
+
+    function filteredShades() {
+      const query = search.value.trim().toLocaleLowerCase();
+      return shades.filter(shade => (activeFilter === "all" || shade.family === activeFilter) && shade.name.toLocaleLowerCase().includes(query));
+    }
+
+    function renderGrid() {
+      const visible = filteredShades();
+      grid.innerHTML = "";
+      resultText.textContent = visible.length === shades.length ? "Showing all 25 shades" : `${visible.length} shade${visible.length === 1 ? "" : "s"}`;
+
+      if (!visible.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.textContent = "No near-whites match that search.";
+        grid.appendChild(empty);
+        return;
+      }
+
+      visible.forEach(shade => {
+        const card = document.createElement("article");
+        const isPinned = shortlist.some(item => item.name === shade.name);
+        card.className = `swatch-card${shade.name === selected.name ? " active" : ""}`;
+        card.dataset.name = shade.name;
+        card.innerHTML = `
+          <button class="card-main" type="button" aria-label="Preview ${shade.name}">
+            <span class="swatch-color" style="background:${rgbString(shade)}"></span>
+            <span class="swatch-info">
+              <span><span class="swatch-name">${shade.name}</span><br><span class="swatch-family">${labels[shade.family]} · L${shade.lch[0]} C${shade.lch[1]} H${shade.lch[2]}</span></span>
+              <span class="swatch-hex">${toHex(shade.rgb)}</span>
+            </span>
+          </button>
+          <button class="pin" type="button" aria-label="${isPinned ? "Remove" : "Add"} ${shade.name} ${isPinned ? "from" : "to"} shortlist" aria-pressed="${isPinned}">${isPinned ? "−" : "+"}</button>`;
+        card.querySelector(".card-main").addEventListener("click", () => openNeighbors(shade));
+        const pin = card.querySelector(".pin");
+        pin.addEventListener("click", () => toggleShortlist(shade));
+        grid.appendChild(card);
+      });
+    }
+
+    document.querySelectorAll(".filter").forEach(button => {
+      button.addEventListener("click", () => {
+        activeFilter = button.dataset.filter;
+        document.querySelectorAll(".filter").forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+        renderGrid();
+      });
+    });
+
+    document.querySelectorAll("[data-light]").forEach(button => {
+      if (!button.closest(".light-control")) return;
+      button.addEventListener("click", () => {
+        preview.dataset.light = button.dataset.light;
+        document.querySelectorAll(".light-control button").forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+      });
+    });
+
+    document.querySelectorAll("[data-order]").forEach(button => {
+      button.addEventListener("click", () => {
+        spectrumOrder = button.dataset.order;
+        document.querySelectorAll("[data-order]").forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+        renderSpectrum();
+      });
+    });
+
+    search.addEventListener("input", renderGrid);
+    clearShortlist.addEventListener("click", () => { shortlist = []; saveShortlist(); renderShortlist(); renderGrid(); renderSpectrum(); });
+    openComparison.addEventListener("click", () => { renderComparison(); compareDialog.showModal(); });
+    toggleSelectedComparison.addEventListener("click", () => {
+      toggleShortlist(selected);
+    });
+    closeComparison.addEventListener("click", () => compareDialog.close());
+    compareDialog.addEventListener("click", event => {
+      if (event.target === compareDialog) compareDialog.close();
+    });
+    closeNeighbors.addEventListener("click", () => neighborDialog.close());
+
+    restoreShortlist();
+    renderShortlist();
+    renderGrid();
+    selectShade(selected);
+    new ResizeObserver(renderSpectrum).observe(document.querySelector("#spectrumChartWrap"));
+  </script>
+</body>
+</html>
